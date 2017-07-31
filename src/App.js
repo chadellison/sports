@@ -7,10 +7,18 @@ class App extends Component {
         super()
         this.state = {
             userCity: '',
-            cities: {"denver": "Rockies", "dallas": "Rangers"}
+            cities: {
+                denver: {
+                    "team": "Rockies",
+                    "website": "https://www.mlb.com/rockies"
+                },
+                dallas: {
+                    "team": "Rangers",
+                    "website": "https://www.mlb.com/rangers"
+                }
+            }
         }
         this._onChange = this._onChange.bind(this)
-        this.handleSportsTeam = this.handleSportsTeam.bind(this)
     }
 
     _onChange(event) {
@@ -19,37 +27,45 @@ class App extends Component {
         })
     }
 
-    handleSportsTeam() {
-        let userCity = this.state.userCity.toLowerCase().trim()
-        if(userCity === '') {
-            return 'Go ahead and type in a city'
-        } else if(this.state.cities[userCity]) {
-            return `Go ${this.state.cities[userCity]}`
-        } else {
-            return `${userCity} ? Never heard of it.`
-        }
-    }
-
     render() {
+        let sportsData;
+        if (!this.state.cities[this.state.userCity] && this.state.userCity !== '') {
+            sportsData = <div>{`${this.state.userCity}? Never heard of it.`}</div>
+        } else if (this.state.userCity !== '') {
+            sportsData = <SportsData
+                image={`https://robohash.org/${Math.round(Math.random() * 100000).toString(16)}`}
+                team={this.state.cities[this.state.userCity].team}
+                website={this.state.cities[this.state.userCity].website}
+            />
+        } else {
+            sportsData = <div>Go ahead, type in a city</div>
+        }
         return (
             <div className="App">
                 <div className="App-header">
                     <img src={logo} className="App-logo" alt="logo"/>
                     <h2>Welcome to Sports Ball City</h2>
                 </div>
-                    <label type="text">What's your favorite city?</label>
-                    <br></br>
-                    <input id="user-city" type="text" onChange={this._onChange}/>
+                <label type="text">What's your favorite city?</label>
+                <br></br>
+                <input id="user-city" type="text" onChange={this._onChange}/>
                 <br/>
                 <br/>
-                <br/>
-                <br/>
-                <p>
-                    {this.handleSportsTeam()}
-                </p>
-                <button>Find Out more...</button>
+                <div>
+                    {sportsData}
+                </div>
             </div>
         );
+    }
+}
+
+class SportsData extends Component {
+    render() {
+        return (<div>
+            <a href={this.props.website} target="_">Go {this.props.team}</a>
+            <br/>
+            <img src={this.props.image} alt="team logo"/>
+        </div>)
     }
 }
 
