@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import SportsData from './components/SportsData'
 
 class App extends Component {
     constructor() {
@@ -29,13 +30,15 @@ class App extends Component {
 
     render() {
         let sportsData;
-        if (!this.state.cities[this.state.userCity] && this.state.userCity !== '') {
-            sportsData = <div>{`${this.state.userCity}? Never heard of it.`}</div>
-        } else if (this.state.userCity !== '') {
+        let currentCity = this.state.userCity.toLowerCase().trim()
+
+        if (!this.state.cities[currentCity] && currentCity !== '') {
+            sportsData = <div>{`${currentCity}? Never heard of it.`}</div>
+        } else if (currentCity !== '') {
             sportsData = <SportsData
                 image={`https://robohash.org/${Math.round(Math.random() * 100000).toString(16)}`}
-                team={this.state.cities[this.state.userCity].team}
-                website={this.state.cities[this.state.userCity].website}
+                team={this.state.cities[currentCity].team}
+                website={this.state.cities[currentCity].website}
             />
         } else {
             sportsData = <div>Go ahead, type in a city</div>
@@ -56,16 +59,6 @@ class App extends Component {
                 </div>
             </div>
         );
-    }
-}
-
-class SportsData extends Component {
-    render() {
-        return (<div>
-            <a href={this.props.website} target="_">Go {this.props.team}</a>
-            <br/>
-            <img src={this.props.image} alt="team logo"/>
-        </div>)
     }
 }
 
